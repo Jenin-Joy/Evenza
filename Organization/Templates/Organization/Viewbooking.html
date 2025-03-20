@@ -1,0 +1,85 @@
+{% extends 'Organization/Header.html' %}
+{% load static %}
+{% block content %} 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Bookings</title>
+    
+    <style>
+        body {
+            background-color: #f4f7fc;
+            font-family: Arial, sans-serif;
+        }
+        .table-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            color: black;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: linear-gradient(135deg, #0056b3, #004494);
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="table-container">
+        <h2>Event Booking Details</h2>
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Count</th>
+                <th>Event</th>
+                <th>User</th>
+                <th>Amount</th>
+            </tr>
+            
+            {% for i in booking %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.Eventbooking_count }}</td>
+                <td>{{ i.Event_id.event_name }}</td>
+                <td>{{ i.User_id.user_Name }}</td>
+                <td>{{ i.Eventbooking_amount }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>
+
+{% endblock content %}

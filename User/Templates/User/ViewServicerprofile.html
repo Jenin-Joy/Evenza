@@ -1,0 +1,81 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Provider Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .profile-card {
+            width: 350px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+        .profile-img {
+            width: 100%; /* Makes the image responsive */
+            height: 180px; /* Fixed height for uniformity */
+            object-fit: cover; /* Ensures the image maintains aspect ratio */
+            border-radius: 8px; /* Slightly rounded edges for a modern look */
+            margin-bottom: 15px;
+        }
+        .profile-details p {
+            margin: 5px 0;
+        }
+        .btn-container {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container profile-container">
+    <div class="card profile-card">
+        {% if view.sp_Photo %}
+            <img src="{{ view.sp_Photo.url }}" alt="Service Provider" class="profile-img">
+        {% else %}
+            <img src="{% static 'default-profile.png' %}" alt="No Image" class="profile-img">
+        {% endif %}
+
+        <h4>{{ view.ser_name }}</h4>
+        
+        <div class="profile-details">
+            <p><strong>Email:</strong> {{ view.sp_Gmail }}</p>
+            <p><strong>Contact:</strong> {{ view.sp_Contact }}</p>
+            <p><strong>Address:</strong> {{ view.sp_Address }}</p>
+            <p><strong>District:</strong> {{ view.sp_Place.district.district_name }}</p>
+            <p><strong>Place:</strong> {{ view.sp_Place.Place }}</p>
+        </div>
+
+        <div class="btn-container">
+            <a href="{% url 'User:viewpackage' view.id %}" class="btn btn-primary btn-sm">View Packages</a>
+            <a href="{% url 'User:custombooking' view.id %}" class="btn btn-primary btn-sm">Customize</a>
+            <a href="{% url 'User:viewwork' view.id %}" class="btn btn-primary btn-sm">View Work</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+{% endblock content %}

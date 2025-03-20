@@ -1,0 +1,223 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tickets</title>
+    <style>
+        /* Background */
+        body {
+            background: linear-gradient(to right, #141E30, #243B55);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        /* Container for all tickets */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 50px;
+            justify-content: center;
+        }
+
+        /* Individual card */
+        .card {
+            background: #1e293b;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Event image */
+        .event-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        /* Card content */
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 6px;
+        }
+
+        .card-item span:first-child {
+            font-weight: 600;
+            color: #93c5fd;
+        }
+
+        .card-item span:last-child {
+            color: #e5e7eb;
+        }
+
+        /* Status badges */
+        .status-paid {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .status-not-paid {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s ease-in-out;
+            text-align: center;
+            margin-top: 10px;
+            display: block;
+            text-align: center;
+        }
+
+        .btn-rate {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-rate:hover {
+            background-color: #217dbb;
+        }
+
+        .btn-pay {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-pay:hover {
+            background-color: #c0392b;
+        }
+
+        /* Status container */
+        .status-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Status & buttons container */
+        .status-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Button enhancements */
+        .btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Paid status */
+        .status-paid {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        /* Not paid status */
+        .status-not-paid {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        /* Rate button */
+        .btn-rate {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-rate:hover {
+            background-color: #217dbb;
+        }
+
+        /* Pay now button */
+        .btn-pay {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-pay:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cards-container">
+        {% for i in ticket %}
+        <div class="card">
+            <img src="{{ i.Event_id.event_poster.url }}" alt="Event Poster" class="event-image">
+            <div class="card-content">
+                <div class="card-item">
+                    <span>Event</span>
+                    <span>{{ i.Event_id.event_name }}</span>
+                </div>
+                <div class="card-item">
+                    <span>Organizer</span>
+                    <span>{{ i.Event_id.org_id.org_Name }}</span>
+                </div>
+                <div class="card-item">
+                    <span>Date</span>
+                    <span>{{ i.Event_id.event_startdate }} - {{ i.Event_id.event_enddate }}</span>
+                </div>
+                <div class="card-item">
+                    <span>Tickets</span>
+                    <span>{{ i.Eventbooking_count }}</span>
+                </div>
+                <div class="card-item">
+                    <span>Amount</span>
+                    <span>₹{{ i.Eventbooking_amount }}</span>
+                </div>
+                <div class="card-item status-container">
+                    <span>Status</span>
+                    <div class="status-actions">
+                        {% if i.Eventbooking_status == 1 %}
+                        <span class="status-paid">Paid</span>
+                        <a href="{% url 'User:rating' i.Event_id.org_id.id 1 %}" class="btn btn-rate">⭐ Rate</a>
+                        {% else %}
+                        <span class="status-not-paid">Not Paid</span>
+                        <a href="{% url 'User:ticketpayment' i.id %}" class="btn btn-pay">💳 Pay Now</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
+{% endblock content %}

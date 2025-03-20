@@ -1,0 +1,12 @@
+{% for i in pack %}
+<div class="card package-card">
+    <img src="{{ i.pack_photo.url }}" class="package-img" alt="Package Image">
+    <div class="card-body">
+        <h5 class="card-title">{{ i.pack_name }}</h5>
+        <p class="card-text"><strong>Type:</strong> {{ i.pack_typeid.Package_type }}</p>
+        <p class="card-text"><strong>Amount:</strong> ₹{{ i.pack_amount }}</p>
+        <p class="card-text">{{ i.pack_description }}</p>
+        <a href="{% url 'User:Addcart' i.id i.pack_spid.id %}" class="book-btn">Book Now</a>
+    </div>
+</div>
+{% endfor %}

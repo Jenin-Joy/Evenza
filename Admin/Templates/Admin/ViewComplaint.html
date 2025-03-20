@@ -1,0 +1,39 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <table border="1" class="table table-striped">
+            <tr>
+                <td>#</td>
+                <td>User</td>
+                <td>Title</td>
+                <td>Content</td>
+                <td>Action</td>
+            
+            </tr>
+            
+                {% for i in complaint %}
+            <tr>
+            
+                <td>{{forloop.counter}}</td>
+                <td>{{i.User_user_Name}}</td>
+                <td>{{i.Complaint_title}}</td>
+                <td>{{i.Complaint_content}}</td>
+                <td>
+                    <a href="{% url 'Admin:reply' i.id %}" >Reply</a>
+                </td>
+            </tr>
+                {% endfor %}
+        </table>
+    </form>
+</body>
+</html>
+{% endblock content %}

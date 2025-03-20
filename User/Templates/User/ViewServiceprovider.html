@@ -1,0 +1,124 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Providers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .text-warning {
+            color: orange;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .service-card {
+            width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        .service-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Find Service Providers</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label for="select_district" class="form-label">District</label>
+            <select class="form-select" name="select_district" id="select_district">
+                <option value="">...Select...</option>
+                {% for i in district %}
+                    <option value="{{ i.id }}">{{ i.district_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="select_place" class="form-label">Place</label>
+            <select class="form-select" name="select_place" id="select_place">
+                <option value="">...Select...</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card-container" id="result">
+        {% for i,j in view %}
+        <div class="card service-card">
+            <img src="{{ i.sp_Photo.url }}" alt="Service Provider" class="service-img">
+            <div class="card-body text-center">
+                <h5 class="card-title">{{ i.sp_Name }}</h5>
+                <p class="card-text"><strong>Email:</strong> {{ i.sp_Gmail }}</p>
+                <p class="card-text"><strong>Contact:</strong> {{ i.sp_Contact }}</p>
+                <div>
+                    {% for k in ar %} {% if k <= j %} <i class="fa-solid fa-star text-warning"></i>
+                        {% else %}
+                        <i class="fa-solid fa-star star-light"></i>
+                        {% endif %} {% endfor %}
+                </div>
+                <a href="{% url 'User:viewservicerprofile' i.id %}" class="btn btn-primary btn-sm">View More</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#select_district").change(function () {
+        var pid = document.getElementById("select_place").value
+        var did = $(this).val();
+        var ur = "{% url 'Guest:ajaxplace' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, },
+            success: function (data) {
+                $("#select_place").html(data);
+
+                var ur = "{% url 'User:ajaxserviceprovider' %}"
+                $.ajax({
+                    url: ur,
+                    data: { did: did,pid : pid },
+                    success: function (data) {
+                        $("#result").html(data);
+                    },
+                });
+            },
+        });
+    });
+
+    $("#select_place").change(function () {
+        var did = document.getElementById("select_district").value
+        var pid = $(this).val();
+        var ur = "{% url 'User:ajaxserviceprovider' %}"
+        $.ajax({
+            url: ur,
+            data: { pid: pid,did: did },
+            success: function (data) {
+                $("#result").html(data);
+            },
+        });
+    });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,337 @@
+{% extends 'Serviceprovider/Header.html' %}
+{% load static %}
+{% block content %} 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Packages</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Add Google Fonts for Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(
+                135deg,
+                #8ca9f2 0%,    /* Deep blue */
+                #4f6c9c 50%,   /* Light blue */
+                #d4dceb 100%   /* Deep blue */
+            );
+            min-height: 100vh;
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease-in-out infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 0%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at 30% 40%,
+                rgba(74, 134, 232, 0.15) 0%,
+                transparent 70%
+            ),
+            radial-gradient(
+                circle at 70% 60%,
+                rgba(30, 60, 114, 0.15) 0%,
+                transparent 70%
+            );
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .container-box {
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 1); /* Full opacity */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            animation: fadeIn 0.5s ease-in;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-text {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            animation: slideIn 0.5s ease-in;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-title {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-family: 'Georgia', serif;
+            font-size: 20px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .form-control, .form-select {
+            border-radius: 6px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem; /* Consistent spacing */
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #4a86e8;
+            box-shadow: 0 0 8px rgba(74, 134, 232, 0.3);
+        }
+
+        .table th {
+            text-align: left;
+            width: 25%;
+            padding: 6px;
+            color: #444;
+            font-weight: 500;
+            font-size: 1rem;
+            background-color: #f8f9fa;
+        }
+
+        .table td {
+            padding: 6px;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(74, 134, 232, 0.1);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            width: 50%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: linear-gradient(45deg, #2a5298, #4a86e8);
+            border: none;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 3; /* Ensure button is clickable */
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #23447e, #3b6ca8);
+        }
+
+        /* Packages Display Section */
+        .packages-container {
+            margin: 30px auto;
+            padding: 0 15px;
+            position: relative;
+            z-index: 1; /* Above background effects */
+        }
+
+        .packages-title {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .package-card {
+            max-width: 280px; /* Reduced to match work-card */
+            margin: 15px auto;
+            border-radius: 15px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            padding: 1rem;
+            background: rgba(255, 255, 255, 1); /* Full opacity */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            z-index: 2; /* Above container */
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Enhanced hover shadow */
+        }
+
+        .package-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+        }
+
+        .card-body {
+            padding: 0.5rem;
+        }
+
+        .card-title {
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            color: #222; /* Darker for contrast */
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            color: #444; /* Darker for readability */
+            margin-bottom: 0.3rem;
+        }
+
+        .btn-danger {
+            width: 50%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: linear-gradient(45deg, #d9534f, #f28b82);
+            border: none;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 3; /* Ensure button is clickable */
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #c9302c, #d9534f);
+        }
+
+        .no-packages {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Heading -->
+    <!-- <h1 class="welcome-text">Manage Your Packages</h1> -->
+
+    <!-- Add Package Form -->
+    <div class="container container-box">
+        <h2 class="form-title">Add New Package</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th><i class="fas fa-box"></i></th>
+                        <td><input type="text" class="form-control" name="name" placeholder="Enter package name" required></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-info-circle"></i></th>
+                        <td><input type="text" class="form-control" name="des" placeholder="Enter description" required></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-list"></i></th>
+                        <td>
+                            <select class="form-select" name="sel_type" required>
+                                <option value="">--Select--</option>
+                                {% for i in packagetype %}
+                                <option value="{{ i.id }}">{{ i.Package_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-rupee-sign"></i></th>
+                        <td><input type="text" class="form-control" name="num" placeholder="Enter amount" required></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-image"></i></th>
+                        <td><input type="file" class="form-control" name="photo" required></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-primary">Add Package</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Display Packages -->
+    <div class="container mt-5">
+        <h2 class="text-center">My Packages</h2>
+        <div class="row">
+            {% for i in addpackage %}
+            <div class="col-md-4">
+                <div class="card package-card">
+                    <img src="{{ i.pack_photo.url }}" alt="Package Image" class="package-img">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ i.pack_name }}</h5>
+                        <p class="card-text"><strong>Type:</strong> {{ i.pack_typeid.Package_type }}</p>
+                        <p class="card-text"><strong>Amount:</strong> ₹{{ i.pack_amount }}</p>
+                        <p class="card-text"><strong>Description:</strong> {{ i.pack_description }}</p>
+                        <a href="{% url 'Serviceprovider:deletepackage' i.id %}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center mt-4">No packages added yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Debugging script -->
+    <script>
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                console.log(`${button.textContent} button clicked!`);
+                // Prevent default for <a> tags if testing locally without server
+                // Uncomment the next line if needed for debugging:
+                // e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
+
+{% endblock content %}

@@ -1,0 +1,115 @@
+{% extends 'Serviceprovider/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Replied Complaints</title>
+    <style>
+        .replied-container {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .replied-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            color: black;
+        }
+
+        .replied-table th {
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .replied-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            vertical-align: middle;
+        }
+
+        .replied-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .replied-table tr:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Specific styling for Reply column */
+        .reply-content {
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h3>Package Complaint</h3>
+    <div class="replied-container">
+        <form action="">
+            <table class="replied-table">
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Package</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Reply</th>
+                </tr>
+                
+                {% for i in replyed %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.User.user_Name}}</td>
+                    <td>{{i.package.Package_name}}</td>
+                    <td>{{i.Complaint_title}}</td>
+                    <td>{{i.Complaint_content}}</td>
+                    <td class="reply-content">{{i.Complaint_reply}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </form>
+    </div>
+
+    <br>
+
+    <h3>Custome Package Complaint</h3>
+    <div class="replied-container">
+        <form action="">
+            <table class="replied-table">
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Package</th>
+                    <th>Action</th>
+                </tr>
+                
+                {% for i in custom %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.User.user_Name}}</td>
+                    <td>{{i.Complaint_title}}</td>
+                    <td>{{i.Complaint_content}}</td>
+                    <td>{{i.Custombooking.Custombooking_description}}</td>
+                    <td class="reply-content">{{i.Complaint_reply}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock content %}

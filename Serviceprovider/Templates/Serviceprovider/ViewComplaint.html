@@ -1,0 +1,129 @@
+{% extends 'Serviceprovider/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints</title>
+    <style>
+        .complaint-container {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .complaint-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            color: black;
+        }
+
+        .complaint-table th {
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .complaint-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            vertical-align: middle;
+        }
+
+        .complaint-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .complaint-table tr:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-link {
+            color: #0056b3;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid #0056b3;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .action-link:hover {
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h3>Package Complaint</h3>
+    <div class="complaint-container">
+        <form action="">
+            <table class="complaint-table">
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Package</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Action</th>
+                </tr>
+                
+                {% for i in complaint %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.User.user_Name}}</td>
+                    <td>{{i.package.Package_name}}</td>
+                    <td>{{i.Complaint_title}}</td>
+                    <td>{{i.Complaint_content}}</td>
+                    <td>
+                        <a href="{% url 'Serviceprovider:reply' i.id %}" class="action-link">Reply</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </form>
+    </div>
+
+    <br>
+
+
+    <h3>Custome Package Complaint</h3>
+    <div class="complaint-container">
+        <form action="">
+            <table class="complaint-table">
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Package</th>
+                    <th>Action</th>
+                </tr>
+                
+                {% for i in custom %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.User.user_Name}}</td>
+                    <td>{{i.Complaint_title}}</td>
+                    <td>{{i.Complaint_content}}</td>
+                    <td>{{i.Custombooking.Custombooking_description}}</td>
+                    <td>
+                        <a href="{% url 'Serviceprovider:reply' i.id %}" class="action-link">Reply</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock content %}

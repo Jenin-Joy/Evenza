@@ -1,0 +1,104 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Type Management</title>
+    
+    <!-- Custom CSS -->
+    <style>
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        
+        .card {
+            margin-bottom: 30px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .btn-custom {
+            margin: 0 5px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Add/Edit Event Type</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="ev" class="col-form-label">Event Type</label>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" id="ev" 
+                                   name="ename" value="{{editevent.Eventtype}}">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Event Type List Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Event Type List</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Event Type</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in eventype %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{i.Eventtype}}</td>
+                            <td>
+                                <a href="{% url 'Admin:deleteevent' i.id %}" 
+                                   class="btn btn-danger btn-sm btn-custom">Delete</a>
+                                <a href="{% url 'Admin:editevent' i.id %}" 
+                                   class="btn btn-primary btn-sm btn-custom">Edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+</html>
+{% endblock content %}

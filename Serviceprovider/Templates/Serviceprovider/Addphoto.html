@@ -1,0 +1,266 @@
+{% extends 'Serviceprovider/Header.html' %}
+{% load static %}
+{% block content %} 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Gallery</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Add Google Fonts for Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(
+                135deg,
+                #8ca9f2 0%,    /* Deep blue */
+                #4f6c9c 50%,   /* Light blue */
+                #d4dceb 100%   /* Deep blue */
+            );
+            min-height: 100vh;
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease-in-out infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 0%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at 30% 40%,
+                rgba(74, 134, 232, 0.15) 0%,
+                transparent 70%
+            ),
+            radial-gradient(
+                circle at 70% 60%,
+                rgba(30, 60, 114, 0.15) 0%,
+                transparent 70%
+            );
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .container-box {
+            max-width: 450px; /* Reduced from 600px */
+            margin: 30px auto; /* Reduced from 50px */
+            padding: 1.5rem; /* Reduced from 20px */
+            background: rgba(255, 255, 255, 1); /* Full opacity */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            animation: fadeIn 0.5s ease-in;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-text {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            animation: slideIn 0.5s ease-in;
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-title {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-family: 'Georgia', serif;
+            font-size: 20px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .form-control {
+            border-radius: 6px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control:focus {
+            border-color: #4a86e8;
+            box-shadow: 0 0 8px rgba(74, 134, 232, 0.3);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: linear-gradient(45deg, #2a5298, #4a86e8);
+            border: none;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 3; /* Ensure button is clickable */
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #23447e, #3b6ca8);
+        }
+
+        .gallery-container {
+            margin: 30px auto;
+            padding: 0 15px;
+            position: relative;
+            z-index: 1; /* Above background effects */
+        }
+
+        .gallery-title {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .gallery-card {
+            max-width: 280px; /* Reduced from 300px to match work/package cards */
+            margin: 15px auto;
+            border-radius: 15px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            padding: 1rem; /* Reduced from 10px */
+            background: rgba(255, 255, 255, 1); /* Full opacity */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            z-index: 2; /* Above container */
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Enhanced hover shadow */
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 180px; /* Reduced from 200px to match previous */
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+        }
+
+        .card-body {
+            padding: 0.5rem;
+        }
+
+        .btn-danger {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: linear-gradient(45deg, #d9534f, #f28b82);
+            border: none;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 3; /* Ensure button is clickable */
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #c9302c, #d9534f);
+        }
+
+        .no-gallery {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: 'Georgia', serif;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Heading -->
+    <!-- <h1 class="welcome-text">Manage Your Gallery</h1> -->
+
+    <!-- Add Photo Form -->
+    <div class="container container-box">
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center mb-4">Add Photo</h2>
+            <form enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="file" class="form-control" name="txt_photo" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Upload Photo</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Display Gallery Photos -->
+    <div class="container mt-5">
+        <h2 class="text-center">Gallery</h2>
+        <div class="row">
+            {% for i in gallery %}
+            <div class="col-md-4">
+                <div class="card gallery-card">
+                    <img src="{{ i.gallery_photo.url }}" alt="Gallery Image" class="gallery-img">
+                    <div class="card-body">
+                        <a href="{% url 'Serviceprovider:deletegallery' i.id id %}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center mt-4">No photos added yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Debugging script -->
+    <script>
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                console.log(`${button.textContent} button clicked!`);
+                // Prevent default for <a> tags if testing locally without server
+                // Uncomment the next line if needed for debugging:
+                // e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
+
+{% endblock content %}

@@ -1,0 +1,123 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Management</title>
+    
+    <!-- Custom CSS -->
+    <style>
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        
+        .card {
+            margin-bottom: 30px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .btn-custom {
+            margin: 0 5px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Add Place</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3 align-items-center mb-3">
+                        <div class="col-auto">
+                            <label for="select_district" class="col-form-label">District</label>
+                        </div>
+                        <div class="col">
+                            <select name="sel_district">
+                                <option value="">...Select...</option>
+                                {% for i in district %}
+                                <option 
+                                {% if editpla.district.id == i.id %}
+                                    selected
+                                {% endif %}
+                                value="{{i.id}}">{{i.district_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="plac" class="col-form-label">Place</label>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" id="plac" 
+                                   name="place" value="{{editpla.Place}}">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Place List Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Place List</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">District</th>
+                            <th scope="col">Place</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in place %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{i.district.district_name}}</td>
+                            <td>{{i.Place}}</td>
+                            <td>
+                                <a href="{% url 'Admin:deleteplace' i.id %}" 
+                                   class="btn btn-danger btn-sm btn-custom">Delete</a>
+                                <a href="{% url 'Admin:editplace' i.id %}" 
+                                   class="btn btn-primary btn-sm btn-custom">Edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+</html>
+{% endblock content %}

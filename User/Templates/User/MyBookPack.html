@@ -1,0 +1,38 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td>#</td>
+            <td>Name</td>
+            <td>Discription</td>
+            <td>Type</td>
+            <td>Amount</td>
+            <td>photo</td>
+    
+    
+        </tr>
+            {% for i in package %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.Package.pack_name}}</td>
+            <td>{{i.Package.pack_description}}</td>
+            <td>{{i.Package.pack_typeid.Package_type}}</td>
+            <td>{{i.Package.pack_amount}}</td>
+            <td><img src="{{i.Package.pack_photo.url}}" width="150" alt=""></td>
+    {% endfor %}
+        
+    </table>
+</body>
+</html>
+
+{% endblock content %}

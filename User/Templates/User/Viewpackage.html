@@ -1,0 +1,132 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packages</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container {
+            margin-top: 30px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .package-card {
+            width: 320px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: 0.3s ease-in-out;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .package-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .book-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #0056b3;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .book-btn:hover {
+            background-color: #218838;
+        }
+        #txt_amount {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #0056b3;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s ease-in-out;
+        }
+
+        #txt_amount:focus {
+            border-color: #218838;
+            box-shadow: 0px 4px 8px rgba(33, 136, 56, 0.3);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <input type="text" name="txt_amount" id="txt_amount" onkeyup="amountFilter(this.value,'{{id}}')" placeholder="Enter Your Amount Here...">
+        <h2 class="text-center mb-4">Available Packages</h2>
+
+        <div class="card-container" id="package">
+            {% for i in viewpackage %}
+            <div class="card package-card">
+                <img src="{{ i.pack_photo.url }}" class="package-img" alt="Package Image">
+                <div class="card-body">
+                    <h5 class="card-title">{{ i.pack_name }}</h5>
+                    <p class="card-text"><strong>Type:</strong> {{ i.pack_typeid.Package_type }}</p>
+                    <p class="card-text"><strong>Amount:</strong> ₹{{ i.pack_amount }}</p>
+                    <p class="card-text">{{ i.pack_description }}</p>
+                    <a href="{% url 'User:Addcart' i.id i.pack_spid.id %}" class="book-btn">Book Now</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if msg %}
+    <script>
+        alert("{{ msg }}");
+        window.location = "{% url 'User:viewpackage' id %}";
+    </script>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</body>
+
+</html>
+<script>
+    function amountFilter(amount, servicer) {
+        var ur = "{% url 'User:ajaxamountfilter' %}";
+        $.ajax({
+            url: ur,
+            data: { amount: amount, servicer: servicer, },
+            success: function (data) {
+                $("#package").html(data);
+            },
+        });
+    }
+</script>
+
+{% endblock content %}

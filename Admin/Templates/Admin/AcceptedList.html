@@ -1,0 +1,46 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <table border="1" class="table table-striped">
+            <tr>
+                <td>#</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Address</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Photo</td>
+                <td>Proof</td>
+                <td>Action</td>
+            </tr>
+            {% for i in data %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.sp_Name}}</td>
+            <td>{{i.sp_Gmail}}</td>
+            <td>{{i.sp_Contact}}</td>
+            <td>{{i.sp_Address}}</td>
+            <td>{{i.sp_Place.district.district_name}}</td>
+            <td>{{i.sp_Place.Place}}</td>
+            <td><img src="{{i.sp_Photo.url}}" width="150" alt=""></td>
+            <td><img src="{{i.sp_Proof.url}}" width="150" alt=""></td>
+            <td>
+                <a href="{% url 'Admin:verifyserviceprovider' i.id 2 %}">Reject</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    </form>
+</body>
+</html>
+{% endblock content %}
