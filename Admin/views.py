@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from Admin.models import *
 from User.models import *
+from django.conf import settings
+from django.core.mail import send_mail
 
 # Create your views here.
 def logout(request):
@@ -160,10 +162,67 @@ def verifyorganization(request, id, status):
     org = tbl_Organization.objects.get(id=id)
     org.org_Status = status
     org.save()
+    user = org.org_Name
+    user_email = org.org_Email
+    if status == 1:
+        send_mail(
+            f"Your Event Registration is Confirmed, {user}!",
+            (f"Dear {user},\r\n"
+            "Thank you for registering for an event with Evenza! We are excited to confirm your registration and can't wait for you to join us. "
+            "Your participation is important to us, and we are here to ensure everything runs smoothly.\r\n"
+            "if you have any questions or need assistance, feel free to reach out.\r\n"
+            "Warm regards,\r\n"
+            "The Evenza Team"),
+            settings.EMAIL_HOST_USER,
+            [user_email],
+        )
+
+    else:
+        send_mail(
+            f"Your Event Registration Status - Evenza",
+            (f"Dear {user},\r\n"
+            "Thank you for your interest in registering for an event with Evenza. Unfortunately, we regret to inform you that your registration could not be processed at this time.\r\n"
+            "This could be due to various reasons such as some verification issue. We understand this may be disappointing, but please know we value your interest and would love to have you join us in the future.\r\n"
+            "If you have any questions or need further clarification, please donot hesitate to reach out.\r\n"
+            "Thank you again for considering Evenza. We hope to welcome you soon.\r\n"
+            "Warm regards,\r\n"
+            "The Evenza Team"),
+            settings.EMAIL_HOST_USER,
+            [user_email],
+        )
+
     return redirect("Admin:homepage")
 
 def verifyserviceprovider(request, id, status):
     ser = tbl_Serviceprovider.objects.get(id=id)
     ser.sp_Status = status
     ser.save()
+    user = ser.sp_Name
+    user_email = ser.sp_Gmail
+    if status == 1:
+        send_mail(
+            f"Your Event Registration is Confirmed, {user}!",
+            (f"Dear {user},\r\n"
+            "Thank you for registering for an event with Evenza! We are excited to confirm your registration and can't wait for you to join us. "
+            "Your participation is important to us, and we are here to ensure everything runs smoothly.\r\n"
+            "if you have any questions or need assistance, feel free to reach out.\r\n"
+            "Warm regards,\r\n"
+            "The Evenza Team"),
+            settings.EMAIL_HOST_USER,
+            [user_email],
+        )
+
+    else:
+        send_mail(
+            f"Your Event Registration Status - Evenza",
+            (f"Dear {user},\r\n"
+            "Thank you for your interest in registering for an event with Evenza. Unfortunately, we regret to inform you that your registration could not be processed at this time.\r\n"
+            "This could be due to various reasons such as some verification issue. We understand this may be disappointing, but please know we value your interest and would love to have you join us in the future.\r\n"
+            "If you have any questions or need further clarification, please donot hesitate to reach out.\r\n"
+            "Thank you again for considering Evenza. We hope to welcome you soon.\r\n"
+            "Warm regards,\r\n"
+            "The Evenza Team"),
+            settings.EMAIL_HOST_USER,
+            [user_email],
+        )
     return redirect("Admin:homepage")
