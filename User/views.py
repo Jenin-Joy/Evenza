@@ -5,6 +5,8 @@ from Organization.models import *
 from User.models import * 
 from Admin.models import * 
 from django.http import JsonResponse 
+from django.conf import settings
+from django.core.mail import send_mail
 
 # Create your views here.
 def logout(request):
@@ -82,6 +84,9 @@ def viewwork(request,wid):
 def booknow(request, id):
     di=tbl_district.objects.all()
     packagetype=tbl_Packagetype.objects.all()
+    us = tbl_User.objects.get(id=request.session["uid"])
+    user = us.user_Name
+    user_email=us.user_Email
     if request.method == "POST":
         book = tbl_Booking.objects.get(id=id)
         book.Booking_todate = request.POST.get("txt_date")
@@ -90,6 +95,24 @@ def booknow(request, id):
         book.Packagetype_id = tbl_Packagetype.objects.get(id=request.POST.get("sel_type"))
         book.Booking_status = 2
         book.save()
+        send_mail(
+            f"Thank You for Booking a Package with Evenza, {user}!",
+            (f"Dear {user},\r\n"
+            "Thank you for booking a package with Evenza! We are thrilled to have you on board and can't wait to help you create unforgettable memories.\r\n"
+            "Here are the details of your booking:\r\n"
+            f"Booking Date: {book.Booking_date}\r\n"
+            f"Booking For Date: {book.Booking_todate}\r\n"
+            f"Booking Description: {book.Booking_description}\r\n"
+            f"Place: {book.Place_id.Place} (District: {book.Place_id.district.district_name})\r\n"
+            f"Package Type: {book.Packagetype_id.Package_type}\r\n"
+            "\r\n"
+            "We are committed to ensuring your experience is seamless and memorable. If you have any questions or need further assistance with your booking, feel free to reach out.\r\n"
+            "Warm regards,\r\n"
+            "The Evenza Team"),
+            settings.EMAIL_HOST_USER,
+            [user_email],
+        )
+
         return render(request,'User/Booknow.html',{'msg':"Your Package is Booked And waiting for verification"})
     else:
         return render(request,'User/Booknow.html',{'district':di,"packaget":packagetype})
@@ -105,11 +128,32 @@ def viewevent(request):
 def bookcount(request,id):
     event = tbl_Addevent.objects.get(id=id)
     amount = event.event_amount
+    us = tbl_User.objects.get(id=request.session["uid"])
+    user = us.user_Name
+    user_email=us.user_Email
     if request.method=="POST":
-        Event = tbl_Eventbooking.objects.create(Eventbooking_count=request.POST.get('count'),
+        evedata = Event = tbl_Eventbooking.objects.create(Eventbooking_count=request.POST.get('count'),
                                         Event_id=tbl_Addevent.objects.get(id=id),
                                         User_id=tbl_User.objects.get(id=request.session['uid']),
                                         Eventbooking_amount=request.POST.get('txtamount'))
+        eve = tbl_Eventbooking.objects.get(id=evedata.id)
+        send_mail(
+            f"Thank You for Booking a Event with Evenza, {user}!",
+            (f"Dear {user},\r\n"
+            "Thank you for booking a Event with Evenza! We are thrilled to have you on board and can't wait to help you create unforgettable memories.\r\n"
+            "Here are the details of your booking:\r\n"
+            f"Event: {eve.Event_id.event_name}\r\n"
+            f"Start Date: {eve.Event_id.event_startdate}\r\n"
+            f"End Date: {eve.Event_id.event_enddate}\r\n"
+            f"Amount: {eve.Eventbooking_amount}\r\n"
+            f"Count: {eve.Eventbooking_count}\r\n"
+            "We are committed to ensuring your experience is seamless and memorable. If you have any questions or need further assistance with your booking, feel free to reach out.\r\n"
+            "Warm regards,\r\n"
+            "The Evenza Team"),
+            settings.EMAIL_HOST_USER,
+            [user_email],
+        )
+
         return redirect('User:ticketpayment',Event.id)
     else:
         return render(request,'User/Bookcount.html',{"amount":amount})
@@ -252,13 +296,34 @@ def custombooking(request,id):
     di=tbl_district.objects.all()
     packagetype=tbl_Packagetype.objects.all()
     sp=tbl_Serviceprovider.objects.get(id=id)
+    us = tbl_User.objects.get(id=request.session["uid"])
+    user = us.user_Name
+    user_email=us.user_Email
     if request.method=="POST":
-        tbl_Custombooking.objects.create(Custombooking_todate=request.POST.get('date'),
+        custdata = tbl_Custombooking.objects.create(Custombooking_todate=request.POST.get('date'),
                                          Place=tbl_place.objects.get(id=request.POST.get('sel_place')),
                                          Custombooking_description=request.POST.get('des'),
                                          User=tbl_User.objects.get(id=request.session["uid"]),
                                          Serviceprovider=tbl_Serviceprovider.objects.get(id=id),
                                          Packagetype=tbl_Packagetype.objects.get(id=request.POST.get("select_pack")))
+        cust = tbl_Custombooking.objects.get(id=custdata.id)
+        send_mail(
+            f"Thank You for Booking a Package with Evenza, {user}!",  # Subject
+            (f"Dear {user},\r\n"
+            "Thank you for booking a package with Evenza! We are thrilled to have you on board and can't wait to help you create unforgettable memories.\r\n"
+            "Here are the details of your booking:\r\n"
+            f"Booking Date: {cust.Custombooking_date}\r\n"
+            f"Booking For Date: {cust.Custombooking_todate}\r\n"
+            f"Booking Description: {cust.Custombooking_description}\r\n"
+            f"Place: {cust.Place.Place} (Location: {cust.Place.district.district_name})\r\n" 
+            "\r\n"
+            "We are committed to ensuring your experience is seamless and memorable. If you have any questions or need further assistance with your booking, feel free to reach out.\r\n"
+            "Warm regards,\r\n"
+            "The Evenza Team"),
+            settings.EMAIL_HOST_USER,
+            [user_email],
+        )
+
         return redirect('User:viewservicerprofile',id)
     else:
         return render(request,'User/CustomizationBooking.html',{'district':di,"packaget":packagetype})
